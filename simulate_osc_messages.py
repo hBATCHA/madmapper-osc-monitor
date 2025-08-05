@@ -65,17 +65,17 @@ def simulate_madmapper_messages():
                 client.send_message(address, value)
                 
             elif message_type == 'audio_analysis':
-                # Messages d'analyse audio (trame port 1007)
-                audio_params = [
-                    ("/Opacity", "Valeur d'opacité"),      # Contrôle dynamique intensité
-                    ("/Bass", "Bass"),                      # Valeur des graves
-                    ("/Medium", "Medium"),                  # Valeur des medium  
-                    ("/Treble", "Treble"),                 # Valeur des aigus
-                    ("/Amplitude", "Amplitude")             # Valeur de l'amplitude
+                # Message d'analyse audio avec 4 valeurs (Amplitude, Bass, Aigus, Treble)
+                address = "/AudioAnalysis"
+                # Générer 4 valeurs float aléatoires
+                values = [
+                    random.uniform(0.0, 0.5),    # Amplitude
+                    random.uniform(0.0, 0.5),    # Bass
+                    random.uniform(0.0, 0.05),   # Aigus
+                    random.uniform(0.0, 0.1)     # Treble
                 ]
-                address, description = random.choice(audio_params)
-                value = random.uniform(0.0, 1.0)  # float: {0,1}
-                client.send_message(address, value)
+                
+                client.send_message(address, values)
             
             print(f"✅ Message #{message_count} envoyé")
             
@@ -108,17 +108,20 @@ def send_specific_test_messages():
         ("/Strip", 1, "Activation strip pdb"),
         ("/CeilingProjector", 1, "Activation projecteur plafond"),
         
-        # Messages d'analyse audio (float: 0.0 à 1.0)
-        ("/Opacity", 0.75, "Contrôle dynamique intensité lumineuse"),
-        ("/Bass", 0.45, "Valeur des graves"),
-        ("/Medium", 0.68, "Valeur des medium"),
-        ("/Treble", 0.82, "Valeur des aigus"),
-        ("/Amplitude", 0.91, "Valeur de l'amplitude")
+        # Messages d'analyse audio (tuple de 4 valeurs float: Amplitude, Bass, Aigus, Treble)
+        ("/AudioAnalysis", (0.0, 0.0, 0.0, 0.007171630859375), "Analyse audio - 4 valeurs"),
+        ("/AudioAnalysis", (0.009539587423205376, 0.0, 0.0, 0.007171630859375), "Analyse audio - 4 valeurs"),
+        ("/AudioAnalysis", (0.026953309774398804, 0.038912855088710785, 0.03783578798174858, 0.02794901467859745), "Analyse audio - 4 valeurs"),
+        ("/AudioAnalysis", (0.04059069976210594, 0.18142656981945038, 0.11824750155210495, 0.05420586094260216), "Analyse audio - 4 valeurs"),
+        ("/AudioAnalysis", (0.0, 0.0, 0.0, 0.0), "Analyse audio - silence")
     ]
     
     for i, (address, value, description) in enumerate(test_messages, 1):
         client.send_message(address, value)
-        print(f"📤 Test {i:2d}: {address:20} -> {value:5} ({description})")
+        if isinstance(value, tuple):
+            print(f"📤 Test {i:2d}: {address:20} -> {value} ({description})")
+        else:
+            print(f"📤 Test {i:2d}: {address:20} -> {value:5} ({description})")
         time.sleep(0.5)
     
     print(f"\n✅ {len(test_messages)} messages de test Stellantis envoyés!")
