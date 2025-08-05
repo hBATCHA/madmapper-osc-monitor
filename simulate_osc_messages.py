@@ -28,43 +28,10 @@ def simulate_madmapper_messages():
         while True:
             message_count += 1
             
-            # Messages selon le tableau Stellantis
-            message_type = random.choice([
-                'lighting_cue',
-                'system_control', 
-                'activation_messages',
-                'audio_analysis'
-            ])
+            # Messages selon le tableau Stellantis - seulement AudioAnalysis
+            message_type = 'audio_analysis'
             
-            if message_type == 'lighting_cue':
-                # Numéro de la scène lighting /cueX.Y.Z
-                x = random.randint(1, 10)
-                y = random.randint(1, 5)
-                z = random.randint(1, 3)
-                address = f"/cue{x}.{y}.{z}"
-                client.send_message(address, 1)  # Déclenchement int: {1}
-                    
-            elif message_type == 'system_control':
-                # Eteindre tous les modules
-                address = "/off_madmapper"
-                client.send_message(address, 1)  # Déclenchement int: {1}
-                
-            elif message_type == 'activation_messages':
-                # Messages d'activation des différents éléments
-                activation_addresses = [
-                    "/FrontDoors",      # Activation des panneaux de porte avant
-                    "/RearDoors",       # Activation des panneaux de porte arrière  
-                    "/WindowPillars",   # Activation des montants de baie
-                    "/FrontFootwells",  # Activation des caves à pieds avant
-                    "/RearFootwells",   # Activation des caves à pieds arrière
-                    "/Strip",           # Activation du strip pdb
-                    "/CeilingProjector" # Activation du projecteur plafond
-                ]
-                address = random.choice(activation_addresses)
-                value = random.choice([0, 1])  # Activation int: {0,1}
-                client.send_message(address, value)
-                
-            elif message_type == 'audio_analysis':
+            if message_type == 'audio_analysis':
                 # Message d'analyse audio avec 4 valeurs (Amplitude, Bass, Aigus, Treble)
                 address = "/AudioAnalysis"
                 # Générer 4 valeurs float aléatoires
