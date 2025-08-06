@@ -32,17 +32,17 @@ def simulate_madmapper_messages():
             message_type = 'audio_analysis'
             
             if message_type == 'audio_analysis':
-                # Message d'analyse audio avec 4 valeurs (Amplitude, Bass, Aigus, Treble)
-                address = "/AudioAnalysis"
-                # Générer 4 valeurs float aléatoires
-                values = [
-                    random.uniform(0.0, 0.5),    # Amplitude
-                    random.uniform(0.0, 0.5),    # Bass
-                    random.uniform(0.0, 0.05),   # Aigus
-                    random.uniform(0.0, 0.1)     # Treble
+                # Messages d'analyse audio séparés sur 4 adresses différentes
+                audio_messages = [
+                    ("/Bass", random.uniform(0.0, 0.5)),
+                    ("/Medium", random.uniform(0.0, 0.05)),
+                    ("/Treble", random.uniform(0.0, 0.1)),
+                    ("/Amplitude", random.uniform(0.0, 0.5))
                 ]
                 
-                client.send_message(address, values)
+                # Envoyer chaque message séparément
+                for address, value in audio_messages:
+                    client.send_message(address, value)
             
             print(f"✅ Message #{message_count} envoyé")
             
